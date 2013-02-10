@@ -1,5 +1,5 @@
 (function($) {
-	var plugin = $['ui']['autocomplete'].prototype;
+	var plugin = $.ui.autocomplete.prototype;
 	
 	// store copies of the original plugin functions before overwriting
 	var functions = {};
@@ -11,48 +11,47 @@
 	
 	// extend existing functionality of the autocomplete plugin
 	$.extend(true, plugin, {
-		_create: function() {
+		_create: function () {
 			var self = this,
-				doc = this.element[ 0 ].ownerDocument;
+					doc = this.element[0].ownerDocument;
 			
-			functions['_create'].call(this);
+			functions._create.apply(this, arguments);
 			
 			this.hintText = this.element.data('hint');
 			this.searchText = this.element.data('searching');
 			
 			// set up the hint object
-			this.hint = $("<div></div>")
-				.addClass("ui-autocomplete-hint")
-				.appendTo($(this.options.appendTo || "body", doc)[0]);
+			this.hint = $('<div></div>')
+				.addClass('ui-autocomplete-hint')
+				.appendTo($(this.options.appendTo || 'body', doc)[0]);
 			
 			// show/hide hint text on focus/blur
 			this.element
-				.bind("focus.autocomplete", function(event) {
+				.bind('focus.autocomplete', function () {
 					self._showHint(self.hintText);
 				})
-				.bind("blur.autocomplete", function(event) {
+				.bind('blur.autocomplete', function () {
 					self._hideHint();
 				});
 		},
 		
-		destroy: function() {
+		_destroy: function () {
 			this.hint.remove();
-			functions["destroy"].call(this);
+			return functions._destroy.apply(this, arguments);
 		},
 		
-		_search: function( value ) {
-			this._hideHint();
+		_search: function () {
 			this._showHint(this.searchText);
-			functions["_search"].call(this, value);
+			return functions._search.apply(this, arguments);
 		},
 		
-		_response: function( content ) {
+		_response: function () {
 			this._hideHint();
-			functions["_response"].call(this, content);
+			return functions._response.apply(this, arguments);
 		},
 		
-		_showHint: function(text) {
-			var text = $.trim(text);
+		_showHint: function (text) {
+			text = $.trim(text);
 			
 			if (text !== '') {
 				this.hint.text(text).show();
@@ -60,20 +59,14 @@
 			}
 		},
 		
-		_hideHint: function() {
+		_hideHint: function () {
 			this.hint.hide();
 		},
 		
-		_resizeHint: function() {
+		_resizeHint: function () {
 			this.hint
-				// .outerWidth(Math.max(
-				// 	this.hint.width("").outerWidth(),
-				// 	this.element.outerWidth()
-				// ))
 				.outerWidth(this.element.outerWidth())
-				.position($.extend({
-					of: this.element
-				}, this.options.position));
+				.position($.extend({ of: this.element }, this.options.position));
 		}
 	});
 })(jQuery);
