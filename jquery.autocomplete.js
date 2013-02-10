@@ -13,7 +13,7 @@
 	$.extend(true, plugin, {
 		_create: function () {
 			var self = this,
-					doc = this.element[0].ownerDocument;
+				doc = this.element[0].ownerDocument;
 			
 			functions._create.apply(this, arguments);
 			
